@@ -1,6 +1,5 @@
 package com.user.controller;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -65,10 +64,7 @@ public class Controller {
 	    	 return service.findByitem(it);
 	     }
 	     
-	     @GetMapping("/count")
-	     public long getuniqueusers(){
-	    	 return service.countUniqueUsers(getAllUsers());
-	     }
+	    
 	     
 	     @DeleteMapping("/deleteAll")
 	     public void deleteusers() throws Exception {
@@ -80,20 +76,28 @@ public class Controller {
 	    	 
 	    	 String count =service.countUniqueUserId().toString();
 	    	 
-		
+
 	    	 JsonNode node = new ObjectMapper().createObjectNode();
 			return ((ObjectNode)node).set("unique userid:",new ObjectMapper().readTree(count));
 			
 
 	     }
 	     
-	     @PutMapping("/updateListuser")
+	   
+	     
+	     
+	     
+	     
+	     
+	     
+	     
+	     /*  @PutMapping("/updateListuser")
 	     public List<User> updateUser(@RequestBody List<User> user)
 	                                                     throws Exception {
 	 	  List<User> update1 = service.updateListUser(user);
 	       return update1; 
 	   
-	     	 }
+	     }*/
 }
 
 

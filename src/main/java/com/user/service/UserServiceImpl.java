@@ -1,6 +1,7 @@
 package com.user.service;
 
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,8 @@ import com.user.repository.Repository;
 
 @Service
 public class UserServiceImpl {
+
+	private static final Logger logger = (Logger) LoggerFactory.getLogger(User.class);
 	
 	@Autowired
 	private Repository repository;
@@ -54,8 +59,10 @@ public class UserServiceImpl {
 		Optional<User> use =	repository.findById(it);
 
 		if(use.isPresent()) {
+			logger.info("item is found ");
 			return use.get();
 		}else {
+
 			return null;
 		}	}
 	
@@ -71,6 +78,7 @@ public class UserServiceImpl {
 			user1.setBody(user.getBody());
 			return repository.save(user1);
 		}else {
+			logger.info("item is updated ");
 			
 			return null;
 		}
@@ -81,7 +89,7 @@ public class UserServiceImpl {
 		 repository.deleteAll();
 	}
 	
-	public long countUniqueUsers(List<User> user) {
+	/*public long countUniqueUsers(List<User> user) {
 		return repository.count();
 		
 		
@@ -98,7 +106,7 @@ public class UserServiceImpl {
 					.groupingBy(count ->count.getUserId(),Collectors.counting()));*/
 		
 	
-	}
+	
 	
 	
 	
@@ -120,6 +128,7 @@ public class UserServiceImpl {
 		user.get(3).setBody("1800Flowers");
 		repository.saveAll(user);
 		return user;
+		
 
 	}
 	
@@ -133,6 +142,28 @@ public class UserServiceImpl {
 	
 	
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
