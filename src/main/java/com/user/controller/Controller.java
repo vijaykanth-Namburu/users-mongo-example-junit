@@ -6,8 +6,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.user.Exception.NoDataException;
+import com.user.Exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.NonTransientDataAccessException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +39,16 @@ public class Controller {
 	UserServiceImpl service;
 	
 	 	@PostMapping("/create")
-	    public User createUser(@RequestBody User user) {
-	    		
-	    		return service.createUser(user);
-	    }
+	    public ResponseEntity<?> createUser(@RequestBody User user) throws NoDataException {
+
+			User us = service.createUser(user);
+			if (us!=null){
+				return new ResponseEntity<>("created Successfully", HttpStatus.CREATED);
+			}
+			else{
+				throw new NoDataException("Empty Data");
+			}
+		}
 	 	
 	 	@PostMapping("/createAll")
 	    public List<User> createUsers(@RequestBody List<User> user) {
@@ -49,8 +58,15 @@ public class Controller {
 	 	
 	 	
 	 	 @PutMapping("/update/{it}")
-	     public User Updateitem(@PathVariable("it") int it,@RequestBody User user) throws Exception  {
-	    return service.updateItem(user, it);
+	     public ResponseEntity<?> Updateitem(@PathVariable("it") int it,@RequestBody User user) throws Exception  {
+	    User us1 =service.updateItem(user, it);
+		if(us1 != null){
+			return new ResponseEntity<>("Updated it  Successfully", HttpStatus.CREATED);
+		}
+		else{
+			throw new NoDataException("provide it");
+
+		}
 	 	 }
 	 	 
 	 	 @GetMapping("/findAll")
@@ -60,7 +76,7 @@ public class Controller {
 	     }
 	     
 	     @GetMapping("/findByIt/{it}")
-	     public User getitemIt(@PathVariable("it") int it) {
+	     public User getitemIt(@PathVariable("it") int it) throws NotFoundException {
 	    	 return service.findByitem(it);
 	     }
 	     
