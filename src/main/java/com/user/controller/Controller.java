@@ -1,17 +1,13 @@
 package com.user.controller;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.user.Exception.NoDataException;
+import com.user.Exception.NoitemException;
 import com.user.Exception.NotFoundException;
+import com.user.repository.Repository;
+import com.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.NonTransientDataAccessException;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,27 +24,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.user.model.User;
-import com.user.repository.Repository;
-import com.user.service.UserServiceImpl;
 
 
 @RestController
 public class Controller {
 	
 	@Autowired
-	UserServiceImpl service;
-	
-	 	@PostMapping("/create")
-	    public ResponseEntity<?> createUser(@RequestBody User user) throws NoDataException {
+	UserService service;
+	@Autowired
+	private Repository repository;
 
-			User us = service.createUser(user);
-			if (us!=null){
-				return new ResponseEntity<>("created Successfully", HttpStatus.CREATED);
-			}
-			else{
-				throw new NoDataException("Empty Data");
-			}
-		}
+	@PostMapping("/create")
+	    public User createUser(@RequestBody User user) throws NoDataException {
+
+			return service.createUser(user);
+
+	}
 	 	
 	 	@PostMapping("/createAll")
 	    public List<User> createUsers(@RequestBody List<User> user) {
@@ -58,16 +49,22 @@ public class Controller {
 	 	
 	 	
 	 	 @PutMapping("/update/{it}")
-	     public ResponseEntity<?> Updateitem(@PathVariable("it") int it,@RequestBody User user) throws Exception  {
-	    User us1 =service.updateItem(user, it);
-		if(us1 != null){
-			return new ResponseEntity<>("Updated it  Successfully", HttpStatus.CREATED);
-		}
-		else{
-			throw new NoDataException("provide it");
+	     public User Updateitem(@PathVariable("it") int it,@RequestBody User user) throws NoDataException, NoitemException {
+		     user.setIt(it);
+			 return service.updateItem(user);
 
-		}
-	 	 }
+		 }
+
+
+			 /*try {
+				 User us1 =service.updateItem(user, it);
+			 } catch (Exception e) {
+				 throw new RuntimeException(e);
+			 }
+			 return new ResponseEntity<>("Updated it  Successfully", HttpStatus.CREATED);*/
+
+
+
 	 	 
 	 	 @GetMapping("/findAll")
 	     public List<User> getAllUsers() 
@@ -86,6 +83,15 @@ public class Controller {
 	     public void deleteusers() throws Exception {
 	    	 service.deleteAll();
 	     }
+
+
+		 @DeleteMapping("/delete/{it}")
+		 public ResponseEntity<?> deleteUser(@PathVariable("it")  int it) throws NotFoundException{
+			 User us = repository.findById(it).orElseThrow(() -> new NotFoundException("item","id",it));
+			 repository.delete(us);
+			 return ResponseEntity.ok().build();
+
+		 }
 	     
 	     @GetMapping("/countuniqueuserids")
 	     public JsonNode getuniqueuser() throws JsonMappingException, JsonProcessingException{

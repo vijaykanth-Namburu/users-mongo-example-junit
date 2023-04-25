@@ -1,46 +1,35 @@
 package com.user.service;
 
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-import org.slf4j.LoggerFactory;
+import com.user.Exception.NoDataException;
+import com.user.Exception.NoitemException;
+import com.user.Exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.mongodb.client.model.Collation;
 import com.user.model.User;
 import com.user.repository.Repository;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
-	private static final Logger logger = (Logger) LoggerFactory.getLogger(User.class);
+	//private static final Logger logger = (Logger) LoggerFactory.getLogger(User.class);
 	
 	@Autowired
 	private Repository repository;
 	
 	
 	public User createUser(User user) {
+
 		return repository.save(user);
 	}
 	
@@ -55,35 +44,31 @@ public class UserServiceImpl {
 	}
 	
 	
-	public User findByitem(int it) {
-		Optional<User> use =	repository.findById(it);
+	public User findByitem(int it) throws NotFoundException {
+		return repository.findById(it).orElseThrow(() -> new NotFoundException("item","id",it)) ;
+		/*Optional<User> use =	repository.findById(it) ;
 
 		if(use.isPresent()) {
-			logger.info("item is found ");
+			//logger.info("item is found ");
 			return use.get();
 		}else {
 
 			return null;
-		}	}
-	
-	
-	public User updateItem(User user,int it) throws Exception {
-		Optional<User> us=repository.findById(user.getIt());
-		if(us.isPresent())
-		{
-			User user1 =us.get();
-			user1.setUserid(user.getUserId());
-			user1.setIt(user.getIt());
-			user1.setTitle(user.getTitle());
-			user1.setBody(user.getBody());
-			return repository.save(user1);
-		}else {
-			logger.info("item is updated ");
-			
-			return null;
+		}*/
 		}
-		
-	}
+	
+	
+	public User updateItem(User user) throws NoDataException {
+
+		User us=repository.findById(user.getIt()).orElseThrow(() ->new NoDataException("item", "id", user.getIt()));
+		//logger.info("item is updated ");
+			us.setUserid(user.getUserId());
+			us.setIt(user.getIt());
+			us.setTitle(user.getTitle());
+			us.setBody(user.getBody());
+			return repository.save(us);
+		}
+
 	
 	public void deleteAll() {
 		 repository.deleteAll();
