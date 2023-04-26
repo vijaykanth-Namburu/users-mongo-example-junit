@@ -56,15 +56,6 @@ public class Controller {
 		 }
 
 
-			 /*try {
-				 User us1 =service.updateItem(user, it);
-			 } catch (Exception e) {
-				 throw new RuntimeException(e);
-			 }
-			 return new ResponseEntity<>("Updated it  Successfully", HttpStatus.CREATED);*/
-
-
-
 	 	 
 	 	 @GetMapping("/findAll")
 	     public List<User> getAllUsers() 
@@ -86,7 +77,7 @@ public class Controller {
 
 
 		 @DeleteMapping("/delete/{it}")
-		 public ResponseEntity<?> deleteUser(@PathVariable("it")  int it) throws NotFoundException{
+		 public ResponseEntity<?> deleteUserByIt(@PathVariable("it")  int it) throws NotFoundException{
 			 User us = repository.findById(it).orElseThrow(() -> new NotFoundException("item","id",it));
 			 repository.delete(us);
 			 return ResponseEntity.ok().build();
@@ -105,21 +96,7 @@ public class Controller {
 
 	     }
 	     
-	   
-	     
-	     
-	     
-	     
-	     
-	     
-	     
-	     /*  @PutMapping("/updateListuser")
-	     public List<User> updateUser(@RequestBody List<User> user)
-	                                                     throws Exception {
-	 	  List<User> update1 = service.updateListUser(user);
-	       return update1; 
-	   
-	     }*/
+
 }
 
 

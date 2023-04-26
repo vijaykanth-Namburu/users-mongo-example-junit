@@ -8,6 +8,7 @@ public class NotFoundException extends Exception {
 
 
     public NotFoundException(String msg ,String fieldName ,int fieldValue) {
+
         //super();
         super(String.format("%s not found with %s : '%s'", msg, fieldName, fieldValue));
 

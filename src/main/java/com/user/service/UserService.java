@@ -22,5 +22,7 @@ public interface UserService {
 
     void deleteAll();
 
+    public void delete(int it) ;
+
     Object countUniqueUserId();
 }

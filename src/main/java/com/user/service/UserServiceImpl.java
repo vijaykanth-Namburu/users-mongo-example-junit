@@ -12,6 +12,10 @@ import com.user.Exception.NoDataException;
 import com.user.Exception.NoitemException;
 import com.user.Exception.NotFoundException;
 
+import org.apache.juli.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +27,18 @@ import com.user.repository.Repository;
 public class UserServiceImpl implements UserService {
 
 	//private static final Logger logger = (Logger) LoggerFactory.getLogger(User.class);
-	
+
+	//Logger logger=(Logger) LoggerFactory.getLogger("FirstLogger");
+	Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+
 	@Autowired
 	private Repository repository;
 	
 	
 	public User createUser(User user) {
 
+		logger.info(" Inside create user");
 		return repository.save(user);
 	}
 	
@@ -45,23 +54,16 @@ public class UserServiceImpl implements UserService {
 	
 	
 	public User findByitem(int it) throws NotFoundException {
+		logger.info("Finding item with id:"+it);
 		return repository.findById(it).orElseThrow(() -> new NotFoundException("item","id",it)) ;
-		/*Optional<User> use =	repository.findById(it) ;
 
-		if(use.isPresent()) {
-			//logger.info("item is found ");
-			return use.get();
-		}else {
-
-			return null;
-		}*/
 		}
 	
 	
 	public User updateItem(User user) throws NoDataException {
 
 		User us=repository.findById(user.getIt()).orElseThrow(() ->new NoDataException("item", "id", user.getIt()));
-		//logger.info("item is updated ");
+
 			us.setUserid(user.getUserId());
 			us.setIt(user.getIt());
 			us.setTitle(user.getTitle());
@@ -73,28 +75,17 @@ public class UserServiceImpl implements UserService {
 	public void deleteAll() {
 		 repository.deleteAll();
 	}
+
+
+	public void delete(int it) {
+		repository.findById(it);
+	}
+
 	
-	/*public long countUniqueUsers(List<User> user) {
-		return repository.count();
+
 		
 		
-		//return (List<User>) user.stream()
-						//.map(count ->count.getUserId())
-						//.collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
-					
-		
-		
-		
-		
-		
-		/*.collect(Collectors
-					.groupingBy(count ->count.getUserId(),Collectors.counting()));*/
-		
-	
-	
-	
-	
-	
+
 	public Long countUniqueUserId() {
 		
 		

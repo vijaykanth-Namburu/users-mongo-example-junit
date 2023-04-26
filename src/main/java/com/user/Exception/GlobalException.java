@@ -1,5 +1,7 @@
 package com.user.Exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -13,6 +15,8 @@ import java.util.Date;
 @ControllerAdvice
     public class GlobalException {
 
+    Logger logger = LoggerFactory.getLogger("FirstLogger");
+
         @ExceptionHandler(value = NoDataException.class )
         public ResponseEntity<?> Nodata(NoDataException e,WebRequest webRequest){
             ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(),
@@ -24,6 +28,8 @@ import java.util.Date;
         public ResponseEntity<?> NotFound(NotFoundException e, WebRequest webRequest){
               ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(),
                         webRequest.getDescription(false));
+
+              logger.error("item not found with it:"+e.fieldValue);
                 return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
         }
 
