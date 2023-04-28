@@ -28,8 +28,7 @@ public class UserServiceImpl implements UserService {
 
 	//private static final Logger logger = (Logger) LoggerFactory.getLogger(User.class);
 
-	//Logger logger=(Logger) LoggerFactory.getLogger("FirstLogger");
-	Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	Logger logger=(Logger) LoggerFactory.getLogger("FirstLogger");
 
 
 	@Autowired
